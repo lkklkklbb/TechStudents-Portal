@@ -1,0 +1,76 @@
+#### *3. إنشاء/تعديل ملف firebase-config.js في Replit*
+- *الموقع*: داخل مجلد src في Replit
+- *الخطوات*:
+  1. انقر بزر الماوس الأيمن على مجلد src → *New File*
+  2. سمِّ الملف firebase-config.js
+  3. انسخ هذا الكود *بالكامل* والصقه:
+
+  javascript
+  import { initializeApp } from "firebase/app";
+  import { getAuth } from "firebase/auth";
+  import { getFirestore } from "firebase/firestore";
+  import { getStorage } from "firebase/storage";
+
+  const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: "techstudents-porta.firebaseapp.com",
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT,
+    storageBucket: "techstudents-porta.appspot.com",
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
+  };
+
+  const app = initializeApp(firebaseConfig);
+  export const auth = getAuth(app);
+  export const db = getFirestore(app);
+  export const storage = getStorage(app);
+  
+
+#### *4. تثبيت الحزم في Terminal (Replit)*
+- *الموقع: نافذة **Terminal* أسفل واجهة Replit
+- *الأمر المطلوب*:
+  bash
+  npm install firebase @firebase/auth @firebase/firestore @firebase/storage
+  
+
+#### *5. اختبار الاتصال (في Replit)*
+- *الخطوات*:
+  1. أنشئ ملفًا جديدًا في src باسم test.js
+  2. الصق هذا الكود:
+
+  javascript
+  import { auth } from "./firebase-config";
+  console.log("اتصال Firebase:", auth ? "✅ يعمل" : "❌ خطأ");
+  
+  3. شغل المشروع (زر *Run*)
+  4. افتح *Console* (في قسم النتائج أسفل الشاشة)
+  5. إذا ظهرت ✅، كل شيء جاهز!
+
+#### *6. إعادة تشغيل المشروع*
+- في Replit:
+  1. اضغط على زر *Stop*
+  2. اضغط على زر *Run*
+
+---
+
+### *ملخص الأماكن*
+| المهمة                  | المكان               | كيف تصل إليه؟                     |
+|-------------------------|----------------------|-----------------------------------|
+| نسخ مفاتيح Firebase     | Firebase Console     | فتح الرابط في متصفح جديد          |
+| إضافة Secrets           | Replit (القفل)       | أيقونة القفل في الجانب الأيسر      |
+| تعديل الملفات           | Replit (مجلد src)    | النقر بزر الماوس الأيمن → New File|
+| تثبيت الحزم             | Terminal في Replit   | النافذة السفلية في واجهة Replit   |
+| الاختبار                | ملف test.js في Replit| إنشاء ملف جديد في src             |
+
+---
+
+### *ماذا لو ظهر خطأ؟*
+1. *في Console*: 
+   - انسخ رسالة الخطأ وأرسلها هنا
+2. *في Terminal*:
+   - تأكد من كتابة أمر التثبيت بشكل صحيح
+3. *في Secrets*:
+   - تأكد من عدم وجود مسافات قبل/بعد القيم
+
+---
+
+بعد هذه الخطوات، سيعمل مشروعك بشكل صحيح! 🚀 إذا واجهت أي صعوبة، أرسل لي لقطة للشاشة وسأساعدك لحلها.

@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* From college logo color scheme */
+  --background: 0 0% 100%; /* #FFFFFF - white */
+  --foreground: 220 10% 12%; /* #1E1E1E - dark text */
+  --muted: 220 20% 96%; /* #F2F4F7 - light gray */
+  --muted-foreground: 220 15% 66%; /* #9FA6B2 - medium gray */
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 10% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 10% 12%;
+  --border: 220 20% 96%;
+  --input: 220 20% 96%;
+  --primary: 216 83% 26%; /* #0C3C78 - dark blue from logo */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 55% 51%; /* #3A78C9 - light blue from logo */
+  --secondary-foreground: 0 0% 100%; 
+  --accent: 214 55% 51%; /* #3A78C9 - light blue accent */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 4 83% 57%; /* #E74C3C - red warning color */
+  --destructive-foreground: 0 0% 100%;
+  --ring: 216 83% 26%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 220 30% 10%; /* Darker background based on primary color */
+  --foreground: 0 0% 98%;
+  --muted: 220 25% 20%;
+  --muted-foreground: 220 15% 70%;
+  --popover: 220 30% 10%;
+  --popover-foreground: 0 0% 98%;
+  --card: 220 30% 10%;
+  --card-foreground: 0 0% 98%;
+  --border: 220 25% 20%;
+  --input: 220 25% 20%;
+  --primary: 216 83% 36%; /* #0C3C78 but slightly lighter for dark mode */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 55% 61%; /* #3A78C9 but slightly lighter for dark mode */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 214 55% 61%; /* Same as secondary for consistency */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 4 83% 60%; /* #E74C3C with slight adjustment */
+  --destructive-foreground: 0 0% 100%;
+  --ring: 214 55% 61%;
+  --radius: 0.5rem;
+}
+
+/* Set the background color to match our light gray from logo */
+html, body {
+  @apply bg-[#F2F4F7];
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+[dir="rtl"] .rtl-mirror {
+  transform: scaleX(-1);
+}
+
+/* RTL support for margins and paddings */
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}

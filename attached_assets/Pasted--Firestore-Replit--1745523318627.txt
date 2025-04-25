@@ -1,0 +1,156 @@
+إضافة قاعدة بيانات *Firestore* إلى مشروعك في *Replit* خطوة بخطوة، اتبع هذه التعليمات بدقة:
+
+---
+
+### *1. تأكد من إعداد Firebase في Replit أولاً*
+- يجب أن تكون قد أضفت *Secrets* كما في الخطوات السابقة:
+  - VITE_FIREBASE_API_KEY
+  - VITE_FIREBASE_PROJECT_ID
+  - VITE_FIREBASE_APP_ID
+
+---
+
+### *2. إنشاء قاعدة بيانات Firestore*
+1. انتقل إلى [Firebase Console](https://console.firebase.google.com/).
+2. اختر مشروعك > من القائمة اليسرى اختر *Firestore Database*.
+3. انقر على *Create Database*:
+   - اختر *Production mode* (للأمان) أو *Test mode* (للتجربة السريعة).
+   - اختر الموقع الجغرافي الأقرب (مثل eur3 لأوروبا).
+4. انتظر حتى يتم التفعيل (قد يستغرق دقائق).
+
+---
+
+### *3. تهيئة Firestore في كود المشروع*
+أضف هذا الكود إلى ملف firebase-config.js:
+javascript
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
+};
+
+const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app); // ← أهم جزء!
+
+
+---
+
+### *4. تثبيت حزم Firebase الإضافية*
+في *Terminal* في Replit، نفّذ:
+bash
+npm install firebase @firebase/firestore
+
+
+---
+
+### *5. إنشاء أول مجموعة (Collection)*
+#### مثال: إنشاء مجموعة courses للمواد الدراسية
+1. في ملف React (مثل Courses.js):
+javascript
+import { db } from "./firebase-config";
+import { collection, addDoc } from "firebase/firestore";
+
+async function addCourse() {
+  try {
+    await addDoc(collection(db, "courses"), {
+      name: "رياضيات",
+      code: "MATH101",
+      instructor: "د. أحمد"
+    });
+    console.log("تمت إضافة المادة!");
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+
+#### 2. في Firebase Console:
+- انتقل إلى *Firestore Database* > سترى مجموعة courses قد تم إنشاؤها تلقائيًا عند تشغيل الدالة.
+
+---
+
+### *6. جلب البيانات لعرضها*
+استخدم هذا الكود لجلب المواد الدراسية:
+javascript
+import { collection, getDocs } from "firebase/firestore";
+
+async function fetchCourses() {
+  const coursesSnapshot = await getDocs(collection(db, "courses"));
+  const courses = coursesSnapshot.docs.map(doc => doc.data());
+  console.log(courses); // عرض البيانات في الكونسول
+}
+// استدعِ الدالة عند تحميل الصفحة (في useEffect)
+
+
+---
+
+### *7. تعديل قواعد الأمان (مهم!)*
+1. في Firebase Console، انتقل إلى *Firestore Database* > *Rules*.
+2. استبدل القواعد الحالية بـ:
+plaintext
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth != null; // فقط للمسجلين دخولاً
+    }
+  }
+}
+
+3. انقر *Publish*.
+
+---
+
+### *8. اختبار العمليات الأساسية*
+| العملية | الكود | المكان |
+|---------|-------|--------|
+| *إضافة مادة* | addDoc(collection(db, "courses"), {name: "..."}) | صفحة الإدارة |
+| *عرض المواد* | getDocs(collection(db, "courses")) | صفحة الطالب |
+| *حذف مادة* | deleteDoc(doc(db, "courses", id)) | صفحة الإدارة |
+
+---
+
+### *9. نصائح مهمة*
+1. *حماية البيانات*:
+   - لا تستخدم Test mode في النسخة النهائية.
+   - غيّر القواعد لتكون أكثر تحديدًا (مثال: فقط المدير يستطيع الحذف).
+2. *إدارة الأخطاء*:
+   - غلّف جميع عمليات Firestore بـ try/catch.
+3. *المراقبة*:
+   - تتبع الاستخدام في *Firebase Console* > *Usage & Analytics*.
+
+---
+
+### *مثال كامل لصفحة المواد الدراسية*
+javascript
+import { useState, useEffect } from "react";
+import { db, collection, getDocs } from "./firebase-config";
+
+function Courses() {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const snapshot = await getDocs(collection(db, "courses"));
+      setCourses(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    };
+    fetchCourses();
+  }, []);
+
+  return (
+    <div>
+      <h2>المواد الدراسية</h2>
+      <ul>
+        {courses.map(course => (
+          <li key={course.id}>{course.name} - {course.code}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+
+---
